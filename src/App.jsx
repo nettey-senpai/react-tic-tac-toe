@@ -10,12 +10,10 @@ function Square({ value, onSquareClick }) {
   );
 }
 
-function App() {
-  const [xIsNext, setXIsNext] = useState(true);
-  const [squares, setSquares] = useState(Array(9).fill(null));
-
+function Board({ xIsNext, squares, onPlay }) {
   // function to display "X" or "O" when a square is clicked
   function handleClick(i) {
+    // if the button is already clicked or there's a winner
     if (squares[i] || calculateWinner(squares)) {
       return;
     }
@@ -26,11 +24,10 @@ function App() {
     } else {
       nextSquares[i] = "O";
     }
-    setSquares(nextSquares);
-    setXIsNext(!xIsNext);
+    onPlay(nextSquares);
   }
 
-  // Check status of game if there's a winner or if its's next players turn
+  // Display status of game if there's a winner or if its's next players turn
   const winner = calculateWinner(squares);
   let status;
   if (winner) {
@@ -61,6 +58,27 @@ function App() {
   );
 }
 
+export default function Game() {
+  const [xIsNext, setXIsNext] = useState(true);
+  const [history, setHistory] = useState([Array(9).fill(null)]);
+  const currentSquares = history[history.length - 1];
+
+  function handlePlay(nextSquares) {
+    setHistory([...history, nextSquares]);
+    setXIsNext(!xIsNext);
+  }
+  return (
+    <div className="game">
+      <div className="game-board">
+        <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
+      </div>
+      <div className="game-info">
+        <ol>{/* TODO */}</ol>
+      </div>
+    </div>
+  );
+}
+
 // function to check if there's a winner
 function calculateWinner(squares) {
   const lines = [
@@ -88,4 +106,9 @@ Square.propTypes = {
   value: PropTypes.string,
   onSquareClick: PropTypes.func,
 };
-export default App;
+
+Board.propTypes = {
+  xIsNext: PropTypes.bool,
+  squares: PropTypes.array,
+  onPlay: PropTypes.func,
+};
