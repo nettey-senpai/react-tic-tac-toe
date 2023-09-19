@@ -10,10 +10,10 @@ function Square({ value, onSquareClick }) {
   );
 }
 
+// function to display "X" or "O" when a square is clicked
 function Board({ xIsNext, squares, onPlay }) {
-  // function to display "X" or "O" when a square is clicked
+  // if the button is already clicked or there's a winner
   function handleClick(i) {
-    // if the button is already clicked or there's a winner
     if (squares[i] || calculateWinner(squares)) {
       return;
     }
@@ -81,6 +81,7 @@ export default function Game() {
 
 // function to check if there's a winner
 function calculateWinner(squares) {
+  // all possible winning combinations as lines either a row, column or diagonal
   const lines = [
     [0, 1, 2],
     [3, 4, 5],
@@ -91,7 +92,7 @@ function calculateWinner(squares) {
     [0, 4, 8],
     [2, 4, 6],
   ];
-  // check if vales are "XXX" or "OOO"
+  // check if any line has the values "XXX" or "OOO"
   for (let i = 0; i < lines.length; i++) {
     const [a, b, c] = lines[i];
     if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
